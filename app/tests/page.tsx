@@ -54,17 +54,13 @@ function TestsList() {
   const difficulty = searchParams.get('difficulty');
 
   let title = '';
-  let description = '';
 
   if (difficulty === 'BEGINNER') {
     title = 'Boshlang\'ich daraja testlari';
-    description = '7-9 yoshdagi bolalar uchun testlar';
   } else if (difficulty === 'INTERMEDIATE') {
     title = 'O\'rta daraja testlari';
-    description = '10-12 yoshdagi bolalar uchun testlar';
   } else if (difficulty === 'ADVANCED') {
     title = 'Yuqori daraja testlari';
-    description = '13-15 yoshdagi o\'quvchilar uchun testlar';
   }
 
   return (
@@ -72,7 +68,6 @@ function TestsList() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
-          <p className="mt-4 text-lg text-gray-600">{description}</p>
         </div>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">

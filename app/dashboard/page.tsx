@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { User } from '@prisma/client';
 
 interface TestResult {
   id: string;
@@ -19,6 +20,7 @@ interface TestResult {
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,8 +47,31 @@ export default function DashboardPage() {
 
     if (status === 'authenticated') {
       fetchTestResults();
+      fetchUserData();
     }
   }, [status]);
+
+  const fetchUserData = async () => {
+    try {
+      const response = await fetch('/api/users/me');
+      if (!response.ok) {
+        throw new Error('Foydalanuvchi ma&apos;lumotlarini olishda xatolik yuz berdi');
+      }
+      const data = await response.json();
+      setUser(data);
+    } catch (error) {
+      console.error('Foydalanuvchi ma&apos;lumotlarini olishda xatolik', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  function getAgeGroup(age: number) {
+    if (age < 10) return 'KIDS_7_9';
+    if (age >= 10 && age < 13) return 'KIDS_10_12';
+    if (age >= 13 && age < 16) return 'TEENS_13_15';
+    return 'KIDS_7_9';
+  }
 
   if (status === 'loading' || loading) {
     return (
@@ -76,12 +101,9 @@ export default function DashboardPage() {
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <h3 className="text-lg font-medium text-gray-900">Boshlang&apos;ich daraja</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                7-9 yoshdagi bolalar uchun testlar
-              </p>
               <div className="mt-4">
                 <Link
-                  href="/tests?difficulty=BEGINNER&ageGroup=KIDS_7_9"
+                  href={`/tests?difficulty=BEGINNER&ageGroup=${getAgeGroup(user?.age || 0)}`}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
                 >
                   Testlarni boshlash
@@ -93,12 +115,9 @@ export default function DashboardPage() {
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <h3 className="text-lg font-medium text-gray-900">O&apos;rta daraja</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                10-12 yoshdagi bolalar uchun testlar
-              </p>
               <div className="mt-4">
                 <Link
-                  href="/tests?difficulty=INTERMEDIATE&ageGroup=KIDS_10_12"
+                  href={`/tests?difficulty=INTERMEDIATE&ageGroup=${getAgeGroup(user?.age || 0)}`}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
                 >
                   Testlarni boshlash
@@ -110,12 +129,9 @@ export default function DashboardPage() {
           <div className="bg-white overflow-hidden shadow rounded-lg">
             <div className="px-4 py-5 sm:p-6">
               <h3 className="text-lg font-medium text-gray-900">Yuqori daraja</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                13-15 yoshdagi o&apos;quvchilar uchun testlar
-              </p>
               <div className="mt-4">
                 <Link
-                  href="/tests?difficulty=ADVANCED&ageGroup=TEENS_13_15"
+                  href={`/tests?difficulty=ADVANCED&ageGroup=${getAgeGroup(user?.age || 0)}`}
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
                 >
                   Testlarni boshlash

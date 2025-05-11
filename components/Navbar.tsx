@@ -90,7 +90,7 @@ export default function Navbar() {
               </div>
             ) : (
               <Link
-                href="/login"
+                href="/auth/login"
                 className="text-gray-500 hover:text-gray-700 px-3 py-2 rounded-md text-sm font-medium"
               >
                 Kirish
