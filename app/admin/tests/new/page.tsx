@@ -3,6 +3,19 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface Question {
   text: string;
@@ -39,7 +52,7 @@ export default function NewTestPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
           <p className="mt-4 text-gray-600">Yuklanmoqda...</p>
@@ -75,11 +88,6 @@ export default function NewTestPage() {
     e.preventDefault();
     setLoading(true);
 
-    console.log(questions.map((question) => ({
-      ...question,
-      correctAnswer: question.correctAnswer || question.options[0],
-    })));
-
     try {
       const response = await fetch('/api/tests', {
         method: 'POST',
@@ -108,231 +116,195 @@ export default function NewTestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white shadow sm:rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">
-              Yangi test qo&apos;shish
-            </h1>
-
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label
-                  htmlFor="title"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Test nomi
-                </label>
-                <input
-                  type="text"
-                  id="title"
-                  required
-                  value={formData.title}
-                  onChange={(e) =>
-                    setFormData({ ...formData, title: e.target.value })
-                  }
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="description"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Tavsif
-                </label>
-                <textarea
-                  id="description"
-                  required
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  rows={3}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <Card className="shadow-lg border-t-4 border-blue-500">
+          <CardHeader className="bg-gray-50 border-b">
+            <CardTitle className="text-2xl text-blue-700">Yangi test qo&apos;shish</CardTitle>
+          </CardHeader>
+          <CardContent className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="space-y-4">
                 <div>
-                  <label
-                    htmlFor="duration"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Davomiyligi (daqiqa)
-                  </label>
-                  <input
-                    type="number"
-                    id="duration"
+                  <Label htmlFor="title" className="text-lg font-medium">Test nomi</Label>
+                  <Input
+                    type="text"
+                    id="title"
                     required
-                    min="1"
-                    value={formData.duration}
+                    className="mt-2"
+                    value={formData.title}
                     onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        duration: parseInt(e.target.value),
-                      })
+                      setFormData({ ...formData, title: e.target.value })
                     }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                   />
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="difficulty"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Daraja
-                  </label>
-                  <select
-                    id="difficulty"
+                  <Label htmlFor="description" className="text-lg font-medium">Tavsif</Label>
+                  <Textarea
+                    id="description"
                     required
-                    value={formData.difficulty}
+                    className="mt-2"
+                    value={formData.description}
                     onChange={(e) =>
-                      setFormData({ ...formData, difficulty: e.target.value })
+                      setFormData({ ...formData, description: e.target.value })
                     }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  >
-                    <option value="BEGINNER">Boshlang&apos;ich</option>
-                    <option value="INTERMEDIATE">O&apos;rta</option>
-                    <option value="ADVANCED">Yuqori</option>
-                  </select>
+                    rows={3}
+                  />
                 </div>
 
-                <div>
-                  <label
-                    htmlFor="ageGroup"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Yosh guruhi
-                  </label>
-                  <select
-                    id="ageGroup"
-                    required
-                    value={formData.ageGroup}
-                    onChange={(e) =>
-                      setFormData({ ...formData, ageGroup: e.target.value })
-                    }
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                  >
-                    <option value="KIDS_7_9">7-9 yosh</option>
-                    <option value="KIDS_10_12">10-12 yosh</option>
-                    <option value="TEENS_13_15">13-15 yosh</option>
-                    <option value="TEENS_16_18">16-18 yosh</option>
-                  </select>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div>
+                    <Label htmlFor="duration" className="text-lg font-medium">Davomiyligi (daqiqa)</Label>
+                    <Input
+                      type="number"
+                      id="duration"
+                      required
+                      min="1"
+                      className="mt-2"
+                      value={formData.duration}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          duration: parseInt(e.target.value),
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="difficulty" className="text-lg font-medium">Daraja</Label>
+                    <Select
+                      value={formData.difficulty}
+                      onValueChange={(value) => setFormData({ ...formData, difficulty: value })}
+                    >
+                      <SelectTrigger className="mt-2">
+                        <SelectValue placeholder="Darajani tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="BEGINNER">Boshlang&apos;ich</SelectItem>
+                        <SelectItem value="INTERMEDIATE">O&apos;rta</SelectItem>
+                        <SelectItem value="ADVANCED">Yuqori</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="ageGroup" className="text-lg font-medium">Yosh guruhi</Label>
+                    <Select
+                      value={formData.ageGroup}
+                      onValueChange={(value) => setFormData({ ...formData, ageGroup: value })}
+                    >
+                      <SelectTrigger className="mt-2">
+                        <SelectValue placeholder="Yosh guruhini tanlang" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="KIDS_7_9">7-9 yosh</SelectItem>
+                        <SelectItem value="KIDS_10_12">10-12 yosh</SelectItem>
+                        <SelectItem value="TEENS_13_15">13-15 yosh</SelectItem>
+                        <SelectItem value="TEENS_16_18">16-18 yosh</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
               </div>
 
-              <div className="space-y-6">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-medium text-gray-900">Savollar</h2>
-                  <button
-                    type="button"
-                    onClick={addQuestion}
-                    className="inline-flex items-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                  >
+              <div className="space-y-8">
+                <div className="flex justify-between items-center border-b pb-4">
+                  <h2 className="text-xl font-semibold text-blue-700">Savollar</h2>
+                  <Button type="button" onClick={addQuestion} className="bg-green-500 hover:bg-green-600">
                     Savol qo&apos;shish
-                  </button>
+                  </Button>
                 </div>
 
                 {questions.map((question, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-50 p-4 rounded-lg space-y-4"
-                  >
-                    <div className="flex justify-between items-start">
-                      <h3 className="text-lg font-medium text-gray-900">
-                        Savol {index + 1}
-                      </h3>
-                      {questions.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => removeQuestion(index)}
-                          className="text-red-600 hover:text-red-800"
+                  <Card key={index} className="border-l-4 border-l-blue-400">
+                    <CardContent className="space-y-6 p-6">
+                      <div className="flex justify-between items-start">
+                        <h3 className="text-xl font-semibold text-gray-700">
+                          Savol {index + 1}
+                        </h3>
+                        {questions.length > 1 && (
+                          <Button
+                            variant="destructive"
+                            onClick={() => removeQuestion(index)}
+                            size="sm"
+                            className="hover:bg-red-600"
+                          >
+                            O&apos;chirish
+                          </Button>
+                        )}
+                      </div>
+
+                      <div>
+                        <Label htmlFor={`question-${index}`} className="text-lg font-medium">Savol matni</Label>
+                        <Input
+                          type="text"
+                          id={`question-${index}`}
+                          required
+                          className="mt-2"
+                          value={question.text}
+                          onChange={(e) =>
+                            handleQuestionChange(index, 'text', e.target.value)
+                          }
+                        />
+                      </div>
+
+                      <div className="space-y-4">
+                        <Label className="text-lg font-medium">Javob variantlari</Label>
+                        <RadioGroup
+                          value={question.correctAnswer || question.options[0]}
+                          onValueChange={(value) => handleQuestionChange(index, 'correctAnswer', value)}
+                          className="space-y-4"
                         >
-                          O&apos;chirish
-                        </button>
-                      )}
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor={`question-${index}`}
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Savol matni
-                      </label>
-                      <input
-                        type="text"
-                        id={`question-${index}`}
-                        required
-                        value={question.text}
-                        onChange={(e) =>
-                          handleQuestionChange(index, 'text', e.target.value)
-                        }
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <label className="block text-sm font-medium text-gray-700">
-                        Javob variantlari
-                      </label>
-                      {question.options.map((option, optionIndex) => (
-                        <div key={optionIndex} className="flex items-center">
-                          <input
-                            type="radio"
-                            name={`correct-${index}`}
-                            checked={question.correctAnswer ? question.correctAnswer === option : optionIndex === 0}
-                            onChange={() =>
-                              handleQuestionChange(
-                                index,
-                                'correctAnswer',
-                                option
-                              )
-                            }
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                          />
-                          <input
-                            type="text"
-                            required
-                            value={option}
-                            onChange={(e) => {
-                              const newOptions = [...question.options];
-                              newOptions[optionIndex] = e.target.value;
-                              handleQuestionChange(index, 'options', newOptions);
-                            }}
-                            className="ml-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            placeholder={`Variant ${optionIndex + 1}`}
-                          />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                          {question.options.map((option, optionIndex) => (
+                            <div key={optionIndex} className="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
+                              <RadioGroupItem
+                                value={option}
+                                id={`option-${index}-${optionIndex}`}
+                                className="w-5 h-5"
+                              />
+                              <Input
+                                type="text"
+                                required
+                                value={option}
+                                onChange={(e) => {
+                                  const newOptions = [...question.options];
+                                  newOptions[optionIndex] = e.target.value;
+                                  handleQuestionChange(index, 'options', newOptions);
+                                }}
+                                placeholder={`Variant ${optionIndex + 1}`}
+                                className="flex-1"
+                              />
+                            </div>
+                          ))}
+                        </RadioGroup>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
               </div>
 
-              <div className="flex justify-end space-x-4">
-                <button
+              <div className="flex justify-end space-x-4 pt-6 border-t">
+                <Button
                   type="button"
+                  variant="outline"
                   onClick={() => router.push('/admin')}
-                  className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="hover:bg-gray-100"
                 >
                   Bekor qilish
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
                   disabled={loading}
-                  className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="bg-blue-600 hover:bg-blue-700"
                 >
                   {loading ? 'Saqlanmoqda...' : 'Saqlash'}
-                </button>
+                </Button>
               </div>
             </form>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
