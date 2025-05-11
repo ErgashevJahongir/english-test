@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import {
   NavigationMenu,
   NavigationMenuItem,
-  NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 import {
@@ -49,30 +48,24 @@ export default function Navbar() {
             {/* Desktop Navigation */}
             <div className="hidden md:block">
               <NavigationMenu>
-                <NavigationMenuList>
+                <NavigationMenuList className='flex items-center gap-4'>
                   <NavigationMenuItem>
-                    <Link href="/dashboard" legacyBehavior passHref>
-                      <NavigationMenuLink>
-                        Dashboard
-                      </NavigationMenuLink>
+                    <Link href="/dashboard" passHref>
+                      Dashboard
                     </Link>
                   </NavigationMenuItem>
 
                   {session?.user?.role === 'ADMIN' && (
                     <>
                       <NavigationMenuItem>
-                        <Link href="/admin/tests" legacyBehavior passHref>
-                          <NavigationMenuLink>
-                            Testlar
-                          </NavigationMenuLink>
+                        <Link href="/admin/tests" passHref>
+                          Testlar
                         </Link>
                       </NavigationMenuItem>
 
                       <NavigationMenuItem>
-                        <Link href="/admin/dashboard" legacyBehavior passHref>
-                          <NavigationMenuLink>
-                            Statistika
-                          </NavigationMenuLink>
+                        <Link href="/admin/dashboard" passHref>
+                          Statistika
                         </Link>
                       </NavigationMenuItem>
                     </>
