@@ -1,20 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/app/lib/auth';
 import prisma from '@/lib/prisma';
-
-interface Option {
-  id: string;
-  text: string;
-  isCorrect: boolean;
-}
-
-interface Question {
-  id: string;
-  text: string;
-  options: Option[];
-  correctAnswer: string;
-}
 
 interface Answer {
   questionId: string;
@@ -62,9 +49,9 @@ export async function POST(request: Request) {
     }
 
     const body = await request.json();
-    const { testId, answers } = body;
+    const { testId, answers, timeTaken } = body;
 
-    if (!testId || !answers) {
+    if (!testId || !answers || !timeTaken) {
       return new NextResponse('Bad Request', { status: 400 });
     }
 
@@ -84,7 +71,8 @@ export async function POST(request: Request) {
     let correctAnswers = 0;
     const totalQuestions = test.questions.length;
 
-    const processedAnswers = test.questions.map((question: Question) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const processedAnswers = test.questions.map((question: any) => {
       const answer = answers.find((a: Answer) => a.questionId === question.id);
       const isCorrect = answer?.selectedOption === question.correctAnswer;
 
@@ -109,6 +97,8 @@ export async function POST(request: Request) {
         correctAnswers,
         totalQuestions,
         answers: processedAnswers,
+        timeTaken,
+        completed: true,
       },
       include: {
         test: {

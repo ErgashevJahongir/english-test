@@ -1,13 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../auth/[...nextauth]/route';
+import { authOptions } from '@/app/lib/auth';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,8 +18,11 @@ export async function GET(
       );
     }
 
+    const { pathname } = new URL(request.url);
+    const id = pathname.split('/').pop(); // URL'dan id ni ajratamiz
+
     const results = await prisma.testResult.findMany({
-      where: { testId: params.id },
+      where: { testId: id },
       include: {
         user: {
           select: {

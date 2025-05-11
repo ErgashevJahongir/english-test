@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import prisma from '@/lib/prisma';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '@/app/lib/auth';
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -14,9 +13,12 @@ export async function GET(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
+    const { pathname } = new URL(request.url);
+    const id = pathname.split('/').pop(); // URL'dan id ni ajratamiz
+
     const result = await prisma.testResult.findUnique({
       where: {
-        id: params.id,
+        id: id,
       },
       include: {
         test: {
@@ -53,8 +55,7 @@ export async function GET(
 }
 
 export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: Request
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -67,9 +68,12 @@ export async function DELETE(
       return new NextResponse('Forbidden', { status: 403 });
     }
 
+    const { pathname } = new URL(request.url);
+    const id = pathname.split('/').pop(); // URL'dan id ni ajratamiz
+
     await prisma.testResult.delete({
       where: {
-        id: params.id,
+        id: id,
       },
     });
 
@@ -78,4 +82,4 @@ export async function DELETE(
     console.error('Error deleting test result:', error);
     return new NextResponse('Internal Server Error', { status: 500 });
   }
-} 
+}

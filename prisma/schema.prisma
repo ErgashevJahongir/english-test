@@ -58,6 +58,7 @@ model TestResult {
   testId    String
   score     Float
   correctAnswers Int
+  totalQuestions Int
   answers   Json
   timeTaken Int
   completed Boolean  @default(false)

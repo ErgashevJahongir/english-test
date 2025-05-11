@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../auth/[...nextauth]/route';
+import { authOptions } from '@/app/lib/auth';
 import { PrismaClient } from '@prisma/client';
 
 interface Question {
@@ -9,9 +9,12 @@ interface Question {
   correctAnswer: string;
 }
 
+type Difficulty = 'BEGINNER' | 'INTERMEDIATE' | 'ADVANCED';
+type AgeGroup = 'KIDS_7_9' | 'KIDS_10_12' | 'TEENS_13_15' | 'TEENS_16_18';
+
 interface TestWhereInput {
-  difficulty?: string;
-  ageGroup?: string;
+  difficulty?: Difficulty;
+  ageGroup?: AgeGroup;
 }
 
 const prisma = new PrismaClient();
@@ -28,12 +31,18 @@ export async function GET(request: Request) {
     }
 
     const { searchParams } = new URL(request.url);
-    const difficulty = searchParams.get('difficulty');
-    const ageGroup = searchParams.get('ageGroup');
+    const difficulty = searchParams.get('difficulty') as Difficulty | null;
+    const ageGroup = searchParams.get('ageGroup') as AgeGroup | null;
 
     const where: TestWhereInput = {};
-    if (difficulty) where.difficulty = difficulty;
-    if (ageGroup) where.ageGroup = ageGroup;
+
+    // Enum qiymatlarini tekshirish
+    if (difficulty) {
+      where.difficulty = difficulty;
+    }
+    if (ageGroup) {
+      where.ageGroup = ageGroup;
+    }
 
     const tests = await prisma.test.findMany({
       where,
@@ -73,6 +82,24 @@ export async function POST(request: Request) {
 
     const data = await request.json();
     const { title, description, duration, difficulty, ageGroup, questions } = data;
+
+    // Enum qiymatlarini tekshirish
+    const validDifficulties: Difficulty[] = ['BEGINNER', 'INTERMEDIATE', 'ADVANCED'];
+    const validAgeGroups: AgeGroup[] = ['KIDS_7_9', 'KIDS_10_12', 'TEENS_13_15', 'TEENS_16_18'];
+
+    if (!validDifficulties.includes(difficulty)) {
+      return NextResponse.json(
+        { error: 'Noto\'g\'ri difficulty qiymati' },
+        { status: 400 }
+      );
+    }
+
+    if (!validAgeGroups.includes(ageGroup)) {
+      return NextResponse.json(
+        { error: 'Noto\'g\'ri ageGroup qiymati' },
+        { status: 400 }
+      );
+    }
 
     const test = await prisma.test.create({
       data: {

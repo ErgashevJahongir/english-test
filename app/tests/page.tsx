@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
 
 interface Test {
@@ -14,18 +14,10 @@ interface Test {
   ageGroup: string;
 }
 
-export default function TestsPage() {
-  const { status } = useSession();
-  const router = useRouter();
+function TestsList() {
   const searchParams = useSearchParams();
   const [tests, setTests] = useState<Test[]>([]);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/login');
-    }
-  }, [status, router]);
 
   useEffect(() => {
     const fetchTests = async () => {
@@ -45,13 +37,10 @@ export default function TestsPage() {
         setLoading(false);
       }
     };
+    fetchTests();
+  }, [searchParams]);
 
-    if (status === 'authenticated') {
-      fetchTests();
-    }
-  }, [status, searchParams]);
-
-  if (status === 'loading' || loading) {
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -122,4 +111,39 @@ export default function TestsPage() {
       </div>
     </div>
   );
-} 
+}
+
+export default function TestsPage() {
+  const { status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/auth/login');
+    }
+  }, [status, router]);
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Yuklanmoqda...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Yuklanmoqda...</p>
+        </div>
+      </div>
+    }>
+      <TestsList />
+    </Suspense>
+  );
+}

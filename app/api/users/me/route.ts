@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { authOptions } from '@/app/lib/auth';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -36,10 +36,10 @@ export async function GET() {
     }
 
     return NextResponse.json(user);
-  } catch {
-    console.error('Foydalanuvchi ma&apos;lumotlarini olishda xatolik');
+  } catch (error) {
+    console.error('Foydalanuvchi ma\'lumotlarini olishda xatolik:', error);
     return NextResponse.json(
-      { error: 'Foydalanuvchi ma&apos;lumotlarini olishda xatolik yuz berdi' },
+      { error: 'Foydalanuvchi ma\'lumotlarini olishda xatolik yuz berdi' },
       { status: 500 }
     );
   }
@@ -71,7 +71,7 @@ export async function PUT(request: Request) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: 'Bu email allaqachon ro&apos;yxatdan o&apos;tgan' },
+        { error: 'Bu email allaqachon ro\'yxatdan o\'tgan' },
         { status: 400 }
       );
     }
@@ -95,10 +95,10 @@ export async function PUT(request: Request) {
     });
 
     return NextResponse.json(updatedUser);
-  } catch {
-    console.error('Foydalanuvchi ma&apos;lumotlarini yangilashda xatolik');
+  } catch (error) {
+    console.error('Foydalanuvchi ma\'lumotlarini yangilashda xatolik:', error);
     return NextResponse.json(
-      { error: 'Foydalanuvchi ma&apos;lumotlarini yangilashda xatolik yuz berdi' },
+      { error: 'Foydalanuvchi ma\'lumotlarini yangilashda xatolik yuz berdi' },
       { status: 500 }
     );
   }

@@ -11,10 +11,8 @@ interface TestResult {
   correctAnswers: number;
   totalQuestions: number;
   answers: {
-    questionId: string;
-    selectedOption: string;
-    isCorrect: boolean;
-  }[];
+    [key: string]: string;
+  };
   test: {
     title: string;
     description: string;
