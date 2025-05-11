@@ -3,6 +3,17 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { PrismaClient } from '@prisma/client';
 
+interface Question {
+  text: string;
+  options: string[];
+  correctAnswer: string;
+}
+
+interface TestWhereInput {
+  difficulty?: string;
+  ageGroup?: string;
+}
+
 const prisma = new PrismaClient();
 
 export async function GET(request: Request) {
@@ -20,7 +31,7 @@ export async function GET(request: Request) {
     const difficulty = searchParams.get('difficulty');
     const ageGroup = searchParams.get('ageGroup');
 
-    const where: any = {};
+    const where: TestWhereInput = {};
     if (difficulty) where.difficulty = difficulty;
     if (ageGroup) where.ageGroup = ageGroup;
 
@@ -71,7 +82,7 @@ export async function POST(request: Request) {
         difficulty,
         ageGroup,
         questions: {
-          create: questions.map((q: any) => ({
+          create: questions.map((q: Question) => ({
             text: q.text,
             options: q.options,
             correctAnswer: q.correctAnswer.toString(),

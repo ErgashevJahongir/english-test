@@ -32,6 +32,7 @@ export default function LoginPage() {
         router.push('/dashboard');
       }
     } catch (error) {
+      console.error('Login error:', error);
       setError('Xatolik yuz berdi. Iltimos, qaytadan urinib ko&apos;ring');
     } finally {
       setLoading(false);

@@ -15,7 +15,7 @@ interface Test {
 }
 
 export default function TestsPage() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [tests, setTests] = useState<Test[]>([]);
@@ -63,7 +63,6 @@ export default function TestsPage() {
   }
 
   const difficulty = searchParams.get('difficulty');
-  const ageGroup = searchParams.get('ageGroup');
 
   let title = '';
   let description = '';

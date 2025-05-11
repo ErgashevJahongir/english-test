@@ -42,6 +42,8 @@ export async function POST(request: Request) {
       },
     });
 
+    console.log(user);
+
     return NextResponse.json(
       { message: 'Foydalanuvchi muvaffaqiyatli yaratildi' },
       { status: 201 }
@@ -53,4 +55,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-} 
+}
