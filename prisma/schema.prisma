@@ -53,19 +53,19 @@ model Question {
 }
 
 model TestResult {
-  id        String   @id @default(cuid())
-  userId    String
-  testId    String
-  score     Float
-  correctAnswers Int
-  totalQuestions Int
-  answers   Json
-  timeTaken Int
-  completed Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id])
-  test      Test     @relation(fields: [testId], references: [id])
+  id              String   @id @default(cuid())
+  userId          String
+  testId          String
+  score           Float
+  correctAnswers  Int
+  totalQuestions  Int
+  answers         Json
+  timeTaken       Int
+  completed       Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  user            User     @relation(fields: [userId], references: [id])
+  test            Test     @relation(fields: [testId], references: [id])
 
   @@index([userId])
   @@index([testId])
