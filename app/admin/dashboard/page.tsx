@@ -4,6 +4,17 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Stats {
   totalUsers: number;
@@ -61,9 +72,13 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
-          </div>
+          <Card className='shadow-none border-none bg-transparent'>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -73,10 +88,14 @@ export default function AdminDashboardPage() {
     return (
       <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Xatolik</h2>
-            <p className="mt-2 text-gray-600">{error}</p>
-          </div>
+          <Card>
+            <CardContent>
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900">Xatolik</h2>
+                <p className="mt-2 text-gray-600">{error}</p>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -87,23 +106,20 @@ export default function AdminDashboardPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-gray-900">Statistika</h2>
-          <Link
-            href="/admin/tests"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Testlar
-          </Link>
+          <Button asChild>
+            <Link href="/admin/tests">Testlar</Link>
+          </Button>
         </div>
 
         {error && (
-          <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-md">
-            {error}
-          </div>
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
+          <Card>
+            <CardContent>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <svg
@@ -132,11 +148,11 @@ export default function AdminDashboardPage() {
                   </dl>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
+          <Card>
+            <CardContent >
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <svg
@@ -165,11 +181,11 @@ export default function AdminDashboardPage() {
                   </dl>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
+          <Card>
+            <CardContent>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <svg
@@ -198,11 +214,11 @@ export default function AdminDashboardPage() {
                   </dl>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
+          <Card>
+            <CardContent>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
                   <svg
@@ -231,70 +247,56 @@ export default function AdminDashboardPage() {
                   </dl>
                 </div>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="mt-8">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">
-            So&apos;nggi test natijalari
-          </h3>
-          <div className="bg-white shadow rounded-lg overflow-hidden">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Foydalanuvchi
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Test
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Ball
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Sana
-                  </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Amallar
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {stats.recentResults.map((result) => (
-                  <tr key={result.id}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-gray-900">
-                        {result.user.name}
-                      </div>
-                      <div className="text-sm text-gray-500">{result.user.email}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{result.test.title}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{result.score.toFixed(2)}%</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">
-                        {new Date(result.createdAt).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Link
-                        href={`/test-results/${result.id}`}
-                        className="text-blue-600 hover:text-blue-900"
-                      >
-                        Batafsil
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>So&apos;nggi test natijalari</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            {stats.recentResults.length === 0 ? (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Hozircha test natijalari mavjud emas</h3>
+                <p className="text-gray-500">Test natijalari paydo bo&apos;lganda shu yerda ko&apos;rsatiladi</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Foydalanuvchi</TableHead>
+                    <TableHead>Test</TableHead>
+                    <TableHead>Ball</TableHead>
+                    <TableHead>Sana</TableHead>
+                    <TableHead className="text-right">Amallar</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {stats.recentResults.map((result) => (
+                    <TableRow key={result.id}>
+                      <TableCell>
+                        <div className="font-medium">{result.user.name}</div>
+                        <div className="text-sm text-gray-500">{result.user.email}</div>
+                      </TableCell>
+                      <TableCell>{result.test.title}</TableCell>
+                      <TableCell>{result.score.toFixed(2)}%</TableCell>
+                      <TableCell>{new Date(result.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="link" asChild>
+                          <Link href={`/test-results/${result.id}`}>
+                            Batafsil
+                          </Link>
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
-} 
+}

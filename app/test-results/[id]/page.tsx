@@ -4,6 +4,7 @@ import { useState, useEffect, use } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface TestResult {
   id: string;
@@ -72,9 +73,13 @@ export default function TestResultPage({
     return (
       <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
-          </div>
+          <Card className='shadow-none border-none bg-transparent'>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );

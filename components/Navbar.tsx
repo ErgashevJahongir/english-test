@@ -16,14 +16,25 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { useState } from 'react';
+import { Menu, X } from 'lucide-react';
 
 export default function Navbar() {
   const { data: session } = useSession();
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push('/login');
+    try {
+      await signOut({ redirect: false });
+      router.push('/auth/login');
+    } catch (error) {
+      console.error('Chiqishda xatolik:', error);
+    }
+  };
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
   };
 
   return (
@@ -35,40 +46,51 @@ export default function Navbar() {
               Test Platform
             </Link>
 
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <Link href="/dashboard" legacyBehavior passHref>
-                    <NavigationMenuLink>
-                      Dashboard
-                    </NavigationMenuLink>
-                  </Link>
-                </NavigationMenuItem>
+            {/* Desktop Navigation */}
+            <div className="hidden md:block">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <Link href="/dashboard" legacyBehavior passHref>
+                      <NavigationMenuLink>
+                        Dashboard
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
 
-                {session?.user?.role === 'ADMIN' && (
-                  <>
-                    <NavigationMenuItem>
-                      <Link href="/admin/tests" legacyBehavior passHref>
-                        <NavigationMenuLink>
-                          Testlar
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem>
+                  {session?.user?.role === 'ADMIN' && (
+                    <>
+                      <NavigationMenuItem>
+                        <Link href="/admin/tests" legacyBehavior passHref>
+                          <NavigationMenuLink>
+                            Testlar
+                          </NavigationMenuLink>
+                        </Link>
+                      </NavigationMenuItem>
 
-                    <NavigationMenuItem>
-                      <Link href="/admin/dashboard" legacyBehavior passHref>
-                        <NavigationMenuLink>
-                          Statistika
-                        </NavigationMenuLink>
-                      </Link>
-                    </NavigationMenuItem>
-                  </>
-                )}
-              </NavigationMenuList>
-            </NavigationMenu>
+                      <NavigationMenuItem>
+                        <Link href="/admin/dashboard" legacyBehavior passHref>
+                          <NavigationMenuLink>
+                            Statistika
+                          </NavigationMenuLink>
+                        </Link>
+                      </NavigationMenuItem>
+                    </>
+                  )}
+                </NavigationMenuList>
+              </NavigationMenu>
+            </div>
           </div>
 
-          <div className="flex items-center">
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <Button variant="ghost" onClick={toggleMenu}>
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </Button>
+          </div>
+
+          {/* Desktop Profile Menu */}
+          <div className="hidden md:flex items-center">
             {session ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -108,6 +130,69 @@ export default function Navbar() {
             )}
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1">
+              <Link
+                href="/dashboard"
+                className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                onClick={() => setIsOpen(false)}
+              >
+                Dashboard
+              </Link>
+
+              {session?.user?.role === 'ADMIN' && (
+                <>
+                  <Link
+                    href="/admin/tests"
+                    className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Testlar
+                  </Link>
+                  <Link
+                    href="/admin/dashboard"
+                    className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Statistika
+                  </Link>
+                </>
+              )}
+
+              {session ? (
+                <>
+                  <Link
+                    href="/profile"
+                    className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    Profil
+                  </Link>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsOpen(false);
+                    }}
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                  >
+                    Chiqish
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/auth/login"
+                  className="block px-3 py-2 rounded-md text-base font-medium hover:bg-gray-100"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Kirish
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </nav>
   );

@@ -4,6 +4,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
 import Link from 'next/link';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface Test {
   id: string;
@@ -120,10 +121,15 @@ export default function TestsPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Yuklanmoqda...</p>
+      <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <Card className='shadow-none border-none bg-transparent'>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );

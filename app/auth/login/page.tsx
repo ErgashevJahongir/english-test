@@ -4,6 +4,11 @@ import { useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -40,79 +45,92 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-zinc-100 to-zinc-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Tizimga kirish
-        </h2>
+        <div className="text-center">
+          <h1 className="text-4xl font-extrabold text-zinc-900">
+            Xush kelibsiz!
+          </h1>
+          <p className="mt-3 text-zinc-600">
+            O&apos;z hisobingizga kiring va bilimlaringizni sinab ko&apos;ring
+          </p>
+        </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-                {error}
-              </div>
-            )}
+        <Card className="border-2 shadow-md">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center">Tizimga kirish</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-6" onSubmit={handleSubmit}>
+              {error && (
+                <Alert variant="destructive">
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
-              </label>
-              <div className="mt-1">
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="email" className="text-sm font-medium">Email manzilingiz</Label>
+                <Input
                   id="email"
                   name="email"
                   type="email"
                   autoComplete="email"
                   required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full rounded-lg"
+                  placeholder="example@mail.com"
                 />
               </div>
-            </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Parol
-              </label>
-              <div className="mt-1">
-                <input
+              <div className="space-y-2">
+                <Label htmlFor="password" className="text-sm font-medium">Parolingiz</Label>
+                <Input
                   id="password"
                   name="password"
                   type="password"
                   autoComplete="current-password"
                   required
-                  className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                  className="block w-full rounded-lg"
+                  placeholder="••••••••"
                 />
               </div>
-            </div>
 
-            <div>
-              <button
+              <div className="flex items-center justify-between">
+                <div className="text-sm">
+                  <Link href="/auth/forgot-password" className="font-medium text-zinc-900 hover:text-zinc-500">
+                    Parolni unutdingizmi?
+                  </Link>
+                </div>
+              </div>
+
+              <Button
                 type="submit"
                 disabled={loading}
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+                className="w-full text-white py-2 px-4 rounded-lg transition duration-150 ease-in-out"
               >
                 {loading ? 'Kuting...' : 'Kirish'}
-              </button>
-            </div>
-          </form>
+              </Button>
+            </form>
 
-          <div className="mt-6">
-            <div className="relative">
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
-                  Akkauntingiz yo&apos;qmi?{' '}
-                  <Link href="/auth/register" className="font-medium text-blue-600 hover:text-blue-500">
-                    Ro&apos;yxatdan o&apos;ting
-                  </Link>
-                </span>
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-zinc-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-zinc-500">
+                    Akkauntingiz yo&apos;qmi?{' '}
+                    <Link href="/auth/register" className="font-semibold text-zinc-900 hover:text-zinc-500">
+                      Ro&apos;yxatdan o&apos;ting
+                    </Link>
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
-} 
+}

@@ -4,6 +4,17 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface Test {
   id: string;
@@ -52,7 +63,7 @@ export default function AdminTestsPage() {
   };
 
   const handleDelete = async (testId: string) => {
-    if (!confirm('Bu testni o&apos;chirishni xohlaysizmi?')) {
+    if (!confirm('Bu testni o\'chirishni xohlaysizmi?')) {
       return;
     }
 
@@ -62,13 +73,13 @@ export default function AdminTestsPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Testni o&apos;chirishda xatolik yuz berdi');
+        throw new Error('Testni o\'chirishda xatolik yuz berdi');
       }
 
       setTests(tests.filter((test) => test.id !== testId));
     } catch (error) {
-      console.error('Testni o&apos;chirishda xatolik', error);
-      setError('Testni o&apos;chirishda xatolik yuz berdi');
+      console.error('Testni o\'chirishda xatolik', error);
+      setError('Testni o\'chirishda xatolik yuz berdi');
     }
   };
 
@@ -76,9 +87,13 @@ export default function AdminTestsPage() {
     return (
       <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
-          </div>
+          <Card className='shadow-none border-none bg-transparent'>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -89,90 +104,78 @@ export default function AdminTestsPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-gray-900">Testlar</h2>
-          <Link
-            href="/admin/tests/new"
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            Yangi test
-          </Link>
+          <Button asChild>
+            <Link href="/admin/tests/new">
+              Yangi test
+            </Link>
+          </Button>
         </div>
 
         {error && (
-          <div className="mb-4 p-4 bg-red-50 text-red-700 rounded-md">
-            {error}
-          </div>
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
         )}
 
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Sarlavha
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Tavsif
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Vaqt (daqiqa)
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Savollar soni
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Yaratilgan sana
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amallar
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {tests.map((test) => (
-                <tr key={test.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{test.title}</div>
-                  </td>
-                  <td className="px-6 py-4">
-                    <div className="text-sm text-gray-900">{test.description}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{test.duration}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{test.questions.length}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {new Date(test.createdAt).toLocaleDateString()}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <Link
-                      href={`/admin/tests/${test.id}`}
-                      className="text-blue-600 hover:text-blue-900 mr-4"
-                    >
-                      Tahrirlash
-                    </Link>
-                    <Link
-                      href={`/admin/tests/${test.id}/results`}
-                      className="text-green-600 hover:text-green-900 mr-4"
-                    >
-                      Natijalar
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(test.id)}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      O&apos;chirish
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Card>
+          <CardContent className="p-0">
+            {tests.length === 0 ? (
+              <div className="text-center py-12">
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Hozircha testlar mavjud emas</h3>
+                <p className="text-gray-500 mb-4">Yangi test yaratish uchun &quot;Yangi test&quot; tugmasini bosing</p>
+                <Button asChild>
+                  <Link href="/admin/tests/new">
+                    Yangi test yaratish
+                  </Link>
+                </Button>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Sarlavha</TableHead>
+                    <TableHead>Tavsif</TableHead>
+                    <TableHead>Vaqt (daqiqa)</TableHead>
+                    <TableHead>Savollar soni</TableHead>
+                    <TableHead>Yaratilgan sana</TableHead>
+                    <TableHead className="text-right">Amallar</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {tests.map((test) => (
+                    <TableRow key={test.id}>
+                      <TableCell className="font-medium">{test.title}</TableCell>
+                      <TableCell>{test.description}</TableCell>
+                      <TableCell>{test.duration}</TableCell>
+                      <TableCell>{test.questions.length}</TableCell>
+                      <TableCell>{new Date(test.createdAt).toLocaleDateString()}</TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="link" asChild className="mr-2">
+                          <Link href={`/admin/tests/${test.id}`}>
+                            Tahrirlash
+                          </Link>
+                        </Button>
+                        <Button variant="link" asChild className="mr-2">
+                          <Link href={`/admin/tests/${test.id}/results`}>
+                            Natijalar
+                          </Link>
+                        </Button>
+                        <Button
+                          variant="link"
+                          onClick={() => handleDelete(test.id)}
+                          className="text-red-600 hover:text-red-900"
+                        >
+                          O&apos;chirish
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
-} 
+}

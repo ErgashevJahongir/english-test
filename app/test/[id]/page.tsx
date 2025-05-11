@@ -3,6 +3,7 @@
 import { use, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface Question {
   id: string;
@@ -102,7 +103,17 @@ export default function TestPage({ params }: { params: Promise<{ id: string }> }
   };
 
   if (status === 'loading' || !test) {
-    return <div>Yuklanmoqda...</div>;
+    return <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <Card className='shadow-none border-none bg-transparent'>
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>;
   }
 
   const formatTime = (seconds: number) => {

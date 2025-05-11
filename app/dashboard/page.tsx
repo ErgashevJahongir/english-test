@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { User } from '@prisma/client';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface TestResult {
   id: string;
@@ -76,10 +78,14 @@ export default function DashboardPage() {
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Yuklanmoqda...</p>
-        </div>
+        <Card className='shadow-none border-none bg-transparent'>
+          <CardContent className="pt-6">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+              <p className="mt-4 text-gray-600">Yuklanmoqda...</p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
@@ -87,64 +93,63 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Xush kelibsiz, {session?.user?.name}!
-          </h1>
-          <p className="mt-4 text-lg text-gray-600">
-            Ingliz tili bilimlaringizni tekshirish uchun testlarni boshlashingiz mumkin.
-          </p>
-        </div>
+        <Card className="mb-8">
+          <CardContent className="text-center py-6">
+            <CardTitle className="text-3xl font-bold text-gray-900">
+              Xush kelibsiz, {session?.user?.name}!
+            </CardTitle>
+            <p className="mt-4 text-lg text-gray-600">
+              Ingliz tili bilimlaringizni tekshirish uchun testlarni boshlashingiz mumkin.
+            </p>
+          </CardContent>
+        </Card>
 
         <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* Test Categories */}
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
+          <Card>
+            <CardContent>
               <h3 className="text-lg font-medium text-gray-900">Boshlang&apos;ich daraja</h3>
               <div className="mt-4">
-                <Link
-                  href={`/tests?difficulty=BEGINNER&ageGroup=${getAgeGroup(user?.age || 0)}`}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                >
-                  Testlarni boshlash
-                </Link>
+                <Button asChild>
+                  <Link href={`/tests?difficulty=BEGINNER&ageGroup=${getAgeGroup(user?.age || 0)}`}>
+                    Testlarni boshlash
+                  </Link>
+                </Button>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
+          <Card>
+            <CardContent>
               <h3 className="text-lg font-medium text-gray-900">O&apos;rta daraja</h3>
               <div className="mt-4">
-                <Link
-                  href={`/tests?difficulty=INTERMEDIATE&ageGroup=${getAgeGroup(user?.age || 0)}`}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                >
-                  Testlarni boshlash
-                </Link>
+                <Button asChild>
+                  <Link href={`/tests?difficulty=INTERMEDIATE&ageGroup=${getAgeGroup(user?.age || 0)}`}>
+                    Testlarni boshlash
+                  </Link>
+                </Button>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
 
-          <div className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="px-4 py-5 sm:p-6">
+          <Card>
+            <CardContent>
               <h3 className="text-lg font-medium text-gray-900">Yuqori daraja</h3>
               <div className="mt-4">
-                <Link
-                  href={`/tests?difficulty=ADVANCED&ageGroup=${getAgeGroup(user?.age || 0)}`}
-                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
-                >
-                  Testlarni boshlash
-                </Link>
+                <Button asChild>
+                  <Link href={`/tests?difficulty=ADVANCED&ageGroup=${getAgeGroup(user?.age || 0)}`}>
+                    Testlarni boshlash
+                  </Link>
+                </Button>
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         </div>
 
-        {/* Test History */}
-        <div className="mt-12">
-          <h2 className="text-2xl font-bold text-gray-900">Test tarixi</h2>
-          <div className="mt-4 bg-white shadow overflow-hidden sm:rounded-md">
+        <Card className="mt-12">
+          <CardHeader>
+            <CardTitle>Test tarixi</CardTitle>
+          </CardHeader>
+          <CardContent>
             <ul className="divide-y divide-gray-200">
               {testResults.length > 0 ? (
                 testResults.map((result) => (
@@ -172,9 +177,9 @@ export default function DashboardPage() {
                 </li>
               )}
             </ul>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
-} 
+}

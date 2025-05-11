@@ -52,10 +52,15 @@ export default function NewTestPage() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Yuklanmoqda...</p>
+      <div className="min-h-screen bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <Card className='shadow-none border-none bg-transparent'>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <h2 className="text-3xl font-bold text-gray-900">Yuklanmoqda...</h2>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     );
@@ -116,11 +121,11 @@ export default function NewTestPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12">
+    <div className="min-h-screen bg-white py-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <Card className="shadow-lg border-t-4 border-blue-500">
-          <CardHeader className="bg-gray-50 border-b">
-            <CardTitle className="text-2xl text-blue-700">Yangi test qo&apos;shish</CardTitle>
+        <Card className="shadow-lg border-t-4 border-zinc-500">
+          <CardHeader className="bg-white border-b">
+            <CardTitle className="text-2xl text-zinc-700">Yangi test qo&apos;shish</CardTitle>
           </CardHeader>
           <CardContent className="p-6">
             <form onSubmit={handleSubmit} className="space-y-8">
@@ -211,17 +216,17 @@ export default function NewTestPage() {
 
               <div className="space-y-8">
                 <div className="flex justify-between items-center border-b pb-4">
-                  <h2 className="text-xl font-semibold text-blue-700">Savollar</h2>
-                  <Button type="button" onClick={addQuestion} className="bg-green-500 hover:bg-green-600">
+                  <h2 className="text-xl font-semibold text-zinc-700">Savollar</h2>
+                  <Button type="button" onClick={addQuestion}>
                     Savol qo&apos;shish
                   </Button>
                 </div>
 
                 {questions.map((question, index) => (
-                  <Card key={index} className="border-l-4 border-l-blue-400">
+                  <Card key={index} className="border-l-4 border-l-zinc-400">
                     <CardContent className="space-y-6 p-6">
                       <div className="flex justify-between items-start">
-                        <h3 className="text-xl font-semibold text-gray-700">
+                        <h3 className="text-xl font-semibold text-zinc-700">
                           Savol {index + 1}
                         </h3>
                         {questions.length > 1 && (
@@ -229,7 +234,6 @@ export default function NewTestPage() {
                             variant="destructive"
                             onClick={() => removeQuestion(index)}
                             size="sm"
-                            className="hover:bg-red-600"
                           >
                             O&apos;chirish
                           </Button>
@@ -258,7 +262,7 @@ export default function NewTestPage() {
                           className="space-y-4"
                         >
                           {question.options.map((option, optionIndex) => (
-                            <div key={optionIndex} className="flex items-center space-x-4 bg-gray-50 p-3 rounded-lg">
+                            <div key={optionIndex} className="flex items-center space-x-4 bg-zinc-50 p-3 rounded-lg">
                               <RadioGroupItem
                                 value={option}
                                 id={`option-${index}-${optionIndex}`}
@@ -290,14 +294,14 @@ export default function NewTestPage() {
                   type="button"
                   variant="outline"
                   onClick={() => router.push('/admin')}
-                  className="hover:bg-gray-100"
+                  className="hover:bg-zinc-100"
                 >
                   Bekor qilish
                 </Button>
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="bg-zinc-600 hover:bg-zinc-700"
                 >
                   {loading ? 'Saqlanmoqda...' : 'Saqlash'}
                 </Button>
